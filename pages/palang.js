@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
+
+import { useEffect } from 'react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,12 +24,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const rtdb = getDatabase(app);
 
-const state_palang_ref = ref(rtdb, 'state_palang/');
-onValue(state_palang_ref, (snapshot) => {
-  const data = snapshot.val();
-  console.log(data);
-});
-
 export default function Palang() {
+  useEffect(() => {
+    const state_palang_ref = ref(rtdb, 'state_palang/');
+    const unsubscribe = onValue(state_palang_ref, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+    });
+    return () => unsubscribe();
+  }, []);
   return <></>;
 }
